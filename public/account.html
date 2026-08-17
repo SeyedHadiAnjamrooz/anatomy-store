@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My library — Anatomy 3D Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="wordmark">ANATO<span class="dot">•</span>LAB</a>
+    <div class="nav-links">
+      <a href="/">Discover</a>
+      <a href="/account.html">My library</a>
+    </div>
+    <div style="flex:1"></div>
+    <div class="nav-right" id="nav-right"></div>
+  </div>
+</nav>
+
+<div class="container" style="padding:32px 0 80px; max-width:760px;">
+  <h1 class="page-title">My library</h1>
+  <p class="page-sub" id="paid-banner"></p>
+  <div id="orders-list"><p class="page-sub">Loading…</p></div>
+</div>
+
+<script src="/js/session.js"></script>
+<script src="/js/account.js"></script>
+</body>
+</html>

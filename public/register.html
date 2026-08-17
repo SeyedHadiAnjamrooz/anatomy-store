@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — Anatomy 3D Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="wordmark">ANATO<span class="dot">•</span>LAB</a>
+  </div>
+</nav>
+
+<div class="auth-shell">
+  <h1>Create your account</h1>
+  <p class="sub">Purchases and downloads are tied to your account.</p>
+  <form id="register-form">
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" minlength="8" required>
+    </div>
+    <p class="form-msg" id="msg"></p>
+    <button class="btn btn-primary btn-block" type="submit">Sign up</button>
+  </form>
+  <p class="sub" style="margin-top:18px;">Already have an account? <a href="/login.html" style="color:var(--accent)">Log in</a></p>
+</div>
+
+<script>
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = document.getElementById('msg');
+  msg.textContent = '';
+  msg.className = 'form-msg';
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const res = await fetch('/api/auth/register', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email, password })
+  });
+  const data = await res.json();
+  if (!res.ok) { msg.textContent = data.error; msg.classList.add('error'); return; }
+  location.href = '/account.html';
+});
+</script>
+</body>
+</html>

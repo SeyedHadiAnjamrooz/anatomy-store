@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomy 3D Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="wordmark">ANATO<span class="dot">•</span>LAB</a>
+    <div class="nav-links">
+      <a href="/">Discover</a>
+      <a href="/account.html">My library</a>
+    </div>
+    <div class="searchbar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-input" type="text" placeholder="Search anatomy models...">
+    </div>
+    <div class="nav-right" id="nav-right">
+      <a class="btn" href="/login.html">Log in</a>
+      <a class="btn btn-primary" href="/register.html">Sign up</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container layout">
+  <aside class="sidebar">
+    <h4>Body system</h4>
+    <div id="system-filters">
+      <div class="filter-chip active" data-system="">
+        <span class="chip-dot" style="background:#4d8b93"></span> All systems
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <h1 class="page-title">3D anatomy models</h1>
+    <p class="page-sub" id="result-count">Loading products…</p>
+    <div class="grid" id="product-grid"></div>
+  </main>
+</div>
+
+<footer>Anato Lab &mdash; downloadable 3D anatomy models for education and research.</footer>
+
+<script src="/js/session.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
