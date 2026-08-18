@@ -15,9 +15,28 @@ async function init() {
   const { product: p } = await res.json();
   document.title = `${p.title} — Anatomy 3D Store`;
 
+  // If a rotatable web preview (glb) exists for this product, show it instead
+  // of the flat thumbnail. Convention: /models/<slug>.glb
+  const modelUrl = `/models/${encodeURIComponent(slug)}.glb`;
+  let hasModel = false;
+  try {
+    const head = await fetch(modelUrl, { method: 'HEAD' });
+    hasModel = head.ok;
+  } catch (e) {
+    hasModel = false;
+  }
+
+  const mediaHtml = hasModel
+    ? `<model-viewer src="${modelUrl}" poster="${p.thumb_path || ''}"
+         camera-controls auto-rotate auto-rotate-delay="0"
+         rotation-per-second="18deg" interaction-prompt="none"
+         style="width:100%; height:100%; background:#2a2a2a;"
+         alt="${p.title}"></model-viewer>`
+    : `<img src="${p.thumb_path || '/img/sample-heart.svg'}" alt="${p.title}">`;
+
   root.innerHTML = `
     <div class="product-media">
-      <img src="${p.thumb_path || '/img/sample-heart.svg'}" alt="${p.title}">
+      ${mediaHtml}
     </div>
     <div class="product-info">
       <div class="sys-tag" style="position:static; display:inline-flex; margin-bottom:12px;">
