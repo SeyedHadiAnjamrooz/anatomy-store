@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anato Lab — Add Product</title>
+<style>
+  body {
+    font-family: system-ui, "Segoe UI", Arial, sans-serif;
+    background: #0b0b0d;
+    color: #eee;
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 0 20px 60px;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  p.sub { color: #888; font-size: 0.9rem; margin-top: 0; }
+  label { display: block; margin-top: 18px; font-size: 0.9rem; color: #bbb; }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: #1a1a1d;
+    color: #eee;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  textarea { min-height: 70px; resize: vertical; }
+  button {
+    margin-top: 26px;
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background: #d63333;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  #msg {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    display: none;
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+  }
+  #msg.ok  { display: block; background: #123d1f; color: #9f9; }
+  #msg.err { display: block; background: #3d1212; color: #f99; }
+  .hint { font-size: 0.78rem; color: #777; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Add New Product</h1>
+<p class="sub">This page is for you only — don't share the link.</p>
+
+<label>Admin Token
+  <input type="password" id="adminToken" placeholder="Copy from Railway → Variables → ADMIN_TOKEN">
+</label>
+
+<label>Slug (lowercase letters and dashes only, must be unique)
+  <input type="text" id="slug" placeholder="cerebral-ventricles">
+</label>
+
+<label>Product Title
+  <input type="text" id="title" placeholder="Cerebral Ventricles">
+</label>
+
+<label>Body System
+  <select id="systemTag">
+    <option value="Nervous">Nervous</option>
+    <option value="Cardiovascular">Cardiovascular</option>
+    <option value="Skeletal">Skeletal</option>
+    <option value="Muscular">Muscular</option>
+  </select>
+</label>
+
+<label>File Formats
+  <input type="text" id="formats" value="FBX">
+</label>
+
+<label>Price (USD)
+  <input type="number" id="price" step="0.01" placeholder="19.99">
+</label>
+
+<label>Short Description (optional)
+  <input type="text" id="shortDesc" placeholder="One-line description of the product">
+</label>
+
+<label>Long Description (optional)
+  <textarea id="longDesc"></textarea>
+</label>
+
+<label>Download File Path
+  <input type="text" id="filePath" value="uploads/downloads/brain-ventricle-model.fbx">
+  <div class="hint">The path where you uploaded the file on GitHub, inside uploads/downloads</div>
+</label>
+
+<label>Poly Count (optional)
+  <input type="text" id="polyCount" placeholder="45000">
+</label>
+
+<button id="submitBtn" onclick="submitProduct()">Add Product</button>
+
+<div id="msg"></div>
+
+<script>
+async function submitProduct() {
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('msg');
+  msg.className = '';
+  msg.style.display = 'none';
+
+  const token      = document.getElementById('adminToken').value.trim();
+  const slug       = document.getElementById('slug').value.trim();
+  const title      = document.getElementById('title').value.trim();
+  const system_tag = document.getElementById('systemTag').value;
+  const formats    = document.getElementById('formats').value.trim();
+  const price_usd  = parseFloat(document.getElementById('price').value);
+  const short_desc = document.getElementById('shortDesc').value.trim();
+  const long_desc  = document.getElementById('longDesc').value.trim();
+  const file_path  = document.getElementById('filePath').value.trim();
+  const poly_count = document.getElementById('polyCount').value.trim();
+
+  if (!token || !slug || !title || !system_tag || !formats || !price_usd || !file_path) {
+    msg.textContent = 'Please fill in all required fields: Admin Token, Slug, Title, System, Formats, Price, File Path.';
+    msg.className = 'err';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  try {
+    const res = await fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Token': token
+      },
+      body: JSON.stringify({ slug, title, system_tag, formats, price_usd, short_desc, long_desc, file_path, poly_count })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msg.textContent = 'Product added successfully ✅ (ID: ' + data.id + ')\nRefresh the site\'s homepage to see it.';
+      msg.className = 'ok';
+    } else {
+      msg.textContent = 'Error: ' + (data.error || 'Something went wrong.');
+      msg.className = 'err';
+    }
+  } catch (e) {
+    msg.textContent = 'Connection error: ' + e.message;
+    msg.className = 'err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Add Product';
+  }
+}
+</script>
+</body>
+</html>
