@@ -96,6 +96,11 @@
   <textarea id="longDesc"></textarea>
 </label>
 
+<label>Thumbnail Image Path
+  <input type="text" id="thumbPath" value="/img/cerebral-ventricles.svg">
+  <div class="hint">The path where you uploaded the image on GitHub, inside public/img (must start with /)</div>
+</label>
+
 <label>Download File Path
   <input type="text" id="filePath" value="uploads/downloads/brain-ventricle-model.fbx">
   <div class="hint">The path where you uploaded the file on GitHub, inside uploads/downloads</div>
@@ -124,6 +129,7 @@ async function submitProduct() {
   const price_usd  = parseFloat(document.getElementById('price').value);
   const short_desc = document.getElementById('shortDesc').value.trim();
   const long_desc  = document.getElementById('longDesc').value.trim();
+  const thumb_path = document.getElementById('thumbPath').value.trim();
   const file_path  = document.getElementById('filePath').value.trim();
   const poly_count = document.getElementById('polyCount').value.trim();
 
@@ -143,7 +149,7 @@ async function submitProduct() {
         'Content-Type': 'application/json',
         'X-Admin-Token': token
       },
-      body: JSON.stringify({ slug, title, system_tag, formats, price_usd, short_desc, long_desc, file_path, poly_count })
+      body: JSON.stringify({ slug, title, system_tag, formats, price_usd, short_desc, long_desc, thumb_path, file_path, poly_count })
     });
     const data = await res.json();
     if (res.ok) {
