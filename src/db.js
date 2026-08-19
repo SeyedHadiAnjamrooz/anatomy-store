@@ -1,7 +1,8 @@
 const path = require("path");
 const Database = require("better-sqlite3");
 
-const db = new Database(path.join(__dirname, "..", "store.db"));
+const dataDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || path.join(__dirname, "..");
+const db = new Database(path.join(dataDir, "store.db"));
 db.pragma("journal_mode = WAL");
 
 db.exec(`
@@ -16,13 +17,13 @@ CREATE TABLE IF NOT EXISTS products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   slug TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
-  system_tag TEXT NOT NULL,        -- e.g. Cardiovascular, Skeletal, Muscular, Nervous
-  formats TEXT NOT NULL,           -- e.g. "FBX, OBJ, glTF"
+  system_tag TEXT NOT NULL,       -- e.g. Cardiovascular, Skeletal, Muscular, Nervous
+  formats TEXT NOT NULL,          -- e.g. "FBX, OBJ, glTF"
   price_usd REAL NOT NULL,
   short_desc TEXT,
   long_desc TEXT,
   thumb_path TEXT,
-  file_path TEXT NOT NULL,         -- protected file, only served after purchase
+  file_path TEXT NOT NULL,        -- protected file, only served after purchase
   poly_count TEXT,
   created_at TEXT DEFAULT (datetime('now'))
 );
