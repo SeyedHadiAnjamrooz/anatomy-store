@@ -37,21 +37,31 @@ router.get("/:slug", (req, res) => {
   res.json({ product });
 });
 
-// Admin-only: add a product. No admin UI is built yet -- call this with curl/Postman
+// Admin-only: add or update a product. No admin UI is built yet -- call this with curl/Postman
 // using the X-Admin-Token header, or write your own small internal form later.
+// Submitting the same slug again updates that product instead of failing.
 router.post("/", requireAdmin, (req, res) => {
   const { slug, title, system_tag, formats, price_usd, short_desc, long_desc, thumb_path, file_path, poly_count } =
     req.body;
   if (!slug || !title || !system_tag || !formats || !price_usd || !file_path) {
     return res.status(400).json({ error: "slug, title, system_tag, formats, price_usd, file_path are required." });
   }
-  const info = db
-    .prepare(
-      `INSERT INTO products (slug, title, system_tag, formats, price_usd, short_desc, long_desc, thumb_path, file_path, poly_count)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    )
-    .run(slug, title, system_tag, formats, price_usd, short_desc || "", long_desc || "", thumb_path || "", file_path, poly_count || "");
-  res.json({ ok: true, id: info.lastInsertRowid });
+  db.prepare(
+    `INSERT INTO products (slug, title, system_tag, formats, price_usd, short_desc, long_desc, thumb_path, file_path, poly_count)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(slug) DO UPDATE SET
+       title = excluded.title,
+       system_tag = excluded.system_tag,
+       formats = excluded.formats,
+       price_usd = excluded.price_usd,
+       short_desc = excluded.short_desc,
+       long_desc = excluded.long_desc,
+       thumb_path = excluded.thumb_path,
+       file_path = excluded.file_path,
+       poly_count = excluded.poly_count`
+  ).run(slug, title, system_tag, formats, price_usd, short_desc || "", long_desc || "", thumb_path || "", file_path, poly_count);
+  const row = db.prepare("SELECT id FROM products WHERE slug = ?").get(slug);
+  res.json({ ok: true, id: row.id });
 });
 
 module.exports = router;
