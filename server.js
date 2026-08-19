@@ -20,7 +20,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/orders", orderRoutes);
 app.get("/sitemap.xml", async (req, res) => {
   try {
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const baseUrl = `https://${req.get("host")}`;
     const apiRes = await fetch(`http://localhost:${req.socket.localPort}/api/products`);
     const { products } = await apiRes.json();
     const urls = [
