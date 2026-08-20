@@ -174,7 +174,7 @@ button { font-family: inherit; cursor: pointer; }
 .card:hover { border-color: #3a3b40; transform: translateY(-2px); }
 .card-thumb {
   aspect-ratio: 16/10;
-  background: #101113;
+  background: transparent;
   position: relative;
   overflow: hidden;
 }
@@ -222,7 +222,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 36px 0 80px;
 }
 .product-media {
-  background: #101113;
+  background: transparent;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   aspect-ratio: 4/3;
