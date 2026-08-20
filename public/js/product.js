@@ -27,8 +27,7 @@ async function init() {
   }
 
   const mediaHtml = hasModel
-    ? `<model-viewer src="${modelUrl}" poster="${p.thumb_path || ''}"
-         camera-controls auto-rotate auto-rotate-delay="0"
+? `<model-viewer src="${modelUrl}" poster="${p.thumb_path || ''}" exposure="0.75" shadow-intensity="0.4"         camera-controls auto-rotate auto-rotate-delay="0"
          rotation-per-second="18deg" interaction-prompt="none"
          style="width:100%; height:100%; background:#2a2a2a;"
          alt="${p.title}"></model-viewer>`
