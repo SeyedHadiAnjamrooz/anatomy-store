@@ -1,7 +1,8 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
 const router = express.Router();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 router.post("/", async (req, res) => {
   const { name, email, message } = req.body;
@@ -11,17 +12,9 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.CONTACT_EMAIL_USER,
-        pass: process.env.CONTACT_EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: `"Anato Lab Contact Form" <${process.env.CONTACT_EMAIL_USER}>`,
-      to: process.env.CONTACT_EMAIL_USER,
+    await resend.emails.send({
+      from: "Anato Lab Contact Form <onboarding@resend.dev>",
+      to: [process.env.CONTACT_EMAIL_USER],
       replyTo: email,
       subject: `New contact message from ${name}`,
       text: `From: ${name} <${email}>\n\n${message}`,
