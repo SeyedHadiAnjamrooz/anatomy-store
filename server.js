@@ -7,6 +7,7 @@ const authRoutes = require("./src/routes/auth");
 const productRoutes = require("./src/routes/products");
 const paymentRoutes = require("./src/routes/payments");
 const orderRoutes = require("./src/routes/orders");
+const contactRoutes = require("./src/routes/contact");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/contact", contactRoutes);
 app.get("/sitemap.xml", async (req, res) => {
   try {
     const baseUrl = `https://${req.get("host")}`;
