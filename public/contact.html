@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact &mdash; Anato Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css">
+<style>
+  .field textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    min-height: 120px;
+    resize: vertical;
+    outline: none;
+  }
+  .field textarea:focus { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container topnav-inner">
+    <a href="/" class="wordmark">ANATO<span class="dot">&bull;</span>LAB</a>
+    <div class="nav-links">
+      <a href="/">Discover</a>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-shell">
+  <h1>Contact us</h1>
+  <p class="sub">Questions, licensing, or custom model requests &mdash; send us a message.</p>
+
+  <div class="field">
+    <label>Your name</label>
+    <input type="text" id="name" placeholder="Jane Doe">
+  </div>
+
+  <div class="field">
+    <label>Your email</label>
+    <input type="email" id="email" placeholder="jane@example.com">
+  </div>
+
+  <div class="field">
+    <label>Message</label>
+    <textarea id="message" placeholder="How can we help?"></textarea>
+  </div>
+
+  <button class="btn btn-primary btn-block" id="sendBtn" onclick="sendMessage()">Send</button>
+  <p class="form-msg" id="msg"></p>
+</div>
+
+<script>
+async function sendMessage() {
+  const btn = document.getElementById('sendBtn');
+  const msg = document.getElementById('msg');
+  msg.className = 'form-msg';
+  msg.textContent = '';
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  if (!name || !email || !message) {
+    msg.textContent = 'Please fill in all fields.';
+    msg.className = 'form-msg error';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msg.textContent = 'Message sent \u2014 we\'ll get back to you soon.';
+      msg.className = 'form-msg ok';
+      document.getElementById('name').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('message').value = '';
+    } else {
+      msg.textContent = data.error || 'Something went wrong.';
+      msg.className = 'form-msg error';
+    }
+  } catch (e) {
+    msg.textContent = 'Connection error: ' + e.message;
+    msg.className = 'form-msg error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send';
+  }
+}
+</script>
+</body>
+</html>
